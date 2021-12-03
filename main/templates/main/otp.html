@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Change My Password
+{% endblock title %}
+
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'chat_room/results.css' %}">
+<style>
+    form{
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+{% endblock css_file %}
+
+
+{% block body %}
+    <div id="wrapper" style='margin-top: 3%;'>
+        <h2>Enter OTP</h2>
+        <div class='friend-wrapper' style="margin: 20% auto;">
+            <form action="{% url "main:verify_otp" %}" method="post">
+                <h4>Enter 6 Digits OTP</h4>
+                {% if error %}
+                    <p>{{ error }}</p>
+                {% endif %}
+                {% csrf_token %}
+                <label for="my_otp">
+                Note: Check spam if not received.</label>
+                <input id="my_otp" type="number" name="my_otp">
+                <input type="hidden" name='email' value={{ email }}>
+                <input class='btn btn-danger' type="submit" value='Submit'>
+            </form>
+        </div>
+    </div>
+{% endblock body %}

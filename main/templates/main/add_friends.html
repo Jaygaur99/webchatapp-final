@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %} 
+    Send request
+{% endblock %}
+
+{% block body %} 
+
+{% comment %} Writing friend request logic {% endcomment %}
+<h1>To send friend request</h1>
+{% for users in allusers %}
+    {% comment %} {% if not user.is_superuser %}
+        {% if user not in request.users.friends.all and user != request.user %} {% endcomment %}
+            <h3>{{ users.fname }} <a href="{% url 'send_friend_request' userID=users.id %}">Send friend request</a></h3>
+        {% comment %} {% endif %}
+    {% endif %} {% endcomment %}
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,63 @@
+
+body {
+    background: #e1d4f0;
+    height: 95vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 500px;
+}
+
+.modal-title{
+    position: absolute;
+    top: 4%;
+    left: 40%;
+    color: #34105c;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid silver;
+}
+
+form {
+    padding: 40px;
+    box-sizing: border-box;
+    position: relative;
+    margin: 30px 0;
+}    
+
+
+
+input {
+    width: 30%;
+    padding: 0 5px;
+    height: 40 px;
+    font-size: 16px;
+    border: none;
+    background: #ebe6f1;
+    outline: none;
+}
+
+input[type="submit"] {
+    width: 50%;
+    height: 50px;
+    border: 1px solid;
+    background: #34105c;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+}
+
+button {
+    position: absolute;
+    top: 94%;
+    left: 40%;
+    text-align: center;
+    font-size: 30px;
+    color: #e9f4fb;
+    background: #34105c;
+}
+
+

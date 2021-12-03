@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Friend Requests
+{% endblock %}
+
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'main/friend_request.css'%}">
+{% endblock %}
+
+{% block body %}
+    <div id="wrapper" class='container justify-content-center'>
+        <h2>Received friend request</h2>
+        <br>
+        {% for friend_request in all_friend_requests %}
+            <div class='friend-wrapper'>
+                <div class="img">
+                    <img src="/media/images/default_profile_pic.png" alt="">                    
+                </div>
+                <div class='left'>
+                    <p class='one'>{{ friend_request.from_user.get_full_name }}</p>
+                    <p class='two'>{{ friend_request.from_user }}</p>
+                </div>
+                <div class="right">
+                    <a class='btn btn-primary' href="{% url 'main:accept_friend_request' requestID=friend_request.id %}">
+                        Accept Friend request</a>
+                </div>
+            </div>
+        {% empty %}
+            <h5>No friend request received.</h5>
+        {% endfor %}
+    </div>
+{% endblock %}

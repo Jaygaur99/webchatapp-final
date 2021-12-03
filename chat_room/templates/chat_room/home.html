@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block stylesheet %}
+    background-color: "#fffdd0";
+{% endblock %}
+
+
+{% block title %}
+    DoChat - Home
+{% endblock %}
+
+{% block css_file %}
+    <link rel="stylesheet" href="{% static 'chat_room/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock css_file %}
+
+{% block body %} 
+<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            
+            <div class='profile'>
+                <img src="media/{{ request.user.profile_pic}}" alt="UserIMG">
+                <h4>{{ request.user.get_full_name }}</h4>
+            </div>
+            <form class="d-flex order-1" autocomplete="off" method="post" action="{% url 'main:searchhandle' %}">
+                {% csrf_token %}
+                <div class='autocomplete' id="autocomplete" style="width:800px;">
+                    <input style="padding-left:50px;" class="form-control autocomplete-input" type="text" placeholder="Search" aria-label="Search" name='email'>
+                <ul class="autocomplete-result-list"></ul>
+            </div>
+                <button class="btn btn-outline-success color-button" type="submit">Search</button>
+            </form>
+
+           
+
+            <form class="d-flex order-2" method="post" action="{% url 'main:friend_list' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-success color-button" type="submit">Friends</button>
+            </form>
+
+            <form class="d-flex order-2" method="post" action="{% url 'main:recievedrequests' %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-success color-button" type="submit">Friend Requests</button>
+            </form>
+        
+            <div class='background'>
+                <div class='wrapper'>
+                    <section class='left'>
+                        
+                        {% comment %} <div class='wrap-search'>
+                            <div class='search'>
+                                <span class='fa fa-search'></span>
+                                <input type="text" class='input-search' placeholder="Enter name">
+                            </div>
+                        </div> {% endcomment %}
+                        <div class='friends'>
+                            {% for friend in request.user.friends.all %}
+                                <div class='friend' id="{{ friend.id }}">
+                                    <div class='contact-preview'>
+                                        <img src="media/{{ request.user.profile_pic}}" alt="UserIMG">
+                                        <div class='contact-text'>
+                                            <h1 class='font-name'>{{ friend.get_full_name }}</h1>
+                                            <p class='font-preview'>{{ friend.email }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </section>
+                    <section class='right'>
+                        <div class='chat_box'>
+                            <div class='d-flex justify-content-center' id='img-text-wrapper'>
+                                <div id="initial-wrapper">
+                                    <img src="media/background.png"  alt="">
+                                </div>
+                                <h3>DoChat</h3>
+                                {% comment %} <h1>Welcome to DoChat</h1> {% endcomment %}
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% comment %} {% else %} {% endcomment %}
+    {% comment %} <div id='log-in-wrapper'>
+        <a id='log-in' href="{% url 'main:login' %}">Log In</a>
+    </div>
+    {% endif %} {% endcomment %}
+
+    <script src="https://unpkg.com/@trevoreyre/autocomplete-js"></script>
+    
+    <script>
+        {% if not user.is_authenticated %}
+        window.location.replace("{% url 'main:login' %}");
+        {% endif %}
+        new Autocomplete("#autocomplete",{
+            search :input =>{
+                console.log(input)
+                const url = `/search/?email=${(input)}`
+                return new Promise(resolve =>{
+                    fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data)
+                        resolve(data.data)
+                    })
+                })
+            }
+        })
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+        // Get csrf from cookie
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+            
+
+        $('.friend').click(function(e) {
+            var data = { id: parseInt(e.target.id) };
+            var options = {
+                method: 'POST',
+                headers: {
+                     "X-CSRFToken": getCookie("csrftoken"),
+                     'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+            // console.log(options);
+            $('.chat_box').empty();
+            var html_data = fetch("{% url 'chat_room:chat_person' %}", options)
+                                .then(function (response) {
+                                    // The API call was successful!
+                                    return response.text();
+                                }).then(function (html) {
+                                    // This is the HTML from our response as a text string
+                                    // console.log(html);
+                                    $('.chat_box').append(html);
+                                }); 
+        });
+    </script>
+{% endblock %}

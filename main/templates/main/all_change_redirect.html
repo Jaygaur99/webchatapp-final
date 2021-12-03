@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{{ change }}
+{% endblock %}
+
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'chat_room/results.css' %}">
+{% endblock css_file %}
+
+
+{% block body %}
+<div id='wrapper'>
+    <h2>{{ change }} </h2>
+    <div class="friend-wrapper">
+        <p class='left'>Redirecting in <span id='timer'></span> seconds</p>
+        <p><a class='btn btn-danger' href="{% url 'chat_room:home' %}">Click here</a> to go to login page</p>
+    </div>
+</div>
+<script>
+    var time = 5;
+    var interval = setInterval(function() {
+        time--;
+        if (time == 0) {
+            clearInterval(interval);
+            window.location.href = "{% url 'chat_room:home' %}";
+        }
+        document.getElementById('timer').innerHTML = time;
+    }, 1000);    
+</script>
+{% endblock %}

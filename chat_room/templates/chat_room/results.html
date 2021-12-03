@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Search Results
+{% endblock title %}
+
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'chat_room/results.css' %}">
+{% endblock css_file %}
+
+
+{% block body %}
+    
+    <div id='wrapper' class='search-results'>
+        <h2>Search Results</h2>
+        {% for user in user_list %}
+            {% if not user in request.user.friends.all %}
+                <div class='friend-wrapper'>
+                    <div class="img">
+                        <img src="/media/{{ user.profile_pic }}" alt="">                    
+                    </div>
+                    <div class='left'>
+                        <div class="one"><p>{{ user.get_full_name }}</p></div>
+                        <p>
+                            <strong>{{ user.email }}</strong>
+                        </p>
+                    </div>
+                    <div class='right'>
+                        <a class='btn btn-primary' href="{% url 'main:send_friend_request' userID=user.id %}">Send friend request</a>
+                    </div>
+                </div>
+            {% else %}
+                
+                <div class='friend-wrapper'>
+                    <div class="img">
+                        <img src="/media/{{ user.profile_pic }}" alt="">                    
+                    </div>
+                    <div class='left'>
+                        <div class="one"><p>{{ user.get_full_name }}</p></div>
+                        <p>
+                            <strong>{{ user.email }}</strong>
+                        </p>
+                    </div>
+                    <div class='right'>
+                        <a class='btn btn-danger' href="{% url 'main:send_friend_request' userID=user.id %}">Friends!</a>
+                    </div>
+                </div>
+            {% endif %}
+        {% empty %}
+            <h5>There is no user with such name/email. Please try again</h5>
+        {% endfor %}
+    </div>
+{% endblock body %}

@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+    Friends
+{% endblock %}
+
+{% block css_file %}
+<link rel="stylesheet" href="{% static 'chat_room/results.css' %}">
+{% endblock %}
+
+{% block body %}
+    <div id='wrapper' class='container justify-content-center'>
+        <h2>Friends List</h2>
+        {% for friends in all_friends %}
+            <div class="friend-wrapper">
+                <div class="img">
+                    <img src="/media/{{ friends.profile_pic }}" alt="">                    
+                </div>
+                
+                <div class='left'>
+                    <div class="one"><p>{{ friends.get_full_name }}</p></div>
+                    <p>
+                        <strong>{{ friends.email }}</strong>
+                    </p>
+                </div>
+                <div class='right'>
+                    <a class='btn btn-danger' href="{% url 'main:send_friend_request' userID=user.id %}">Friends!</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
